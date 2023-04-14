@@ -31,7 +31,7 @@ class Terminal(cmd.Cmd):
     def help_help(self):
         """
         Usage: ?, help
-        List available commands with "help" or detailed help with "help cmd".
+        Fuck Off, Gives u a list of the commands.
         """
 
     def load_commands(self):
