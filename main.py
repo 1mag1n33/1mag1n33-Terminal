@@ -10,7 +10,5 @@ if __name__ == '__main__':
             term.cmdloop()
             break
         except KeyboardInterrupt:
-            print("\nKeyboardInterrupt")
+            print("\nKeyboardInterruption")
             term.do_exit()
-            
-            
