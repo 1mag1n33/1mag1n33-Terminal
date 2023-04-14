@@ -5,13 +5,17 @@ import pkgutil
 
 class Terminal(cmd.Cmd):
     intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
-    prompt = '1mag1n33 $ '
+    prompt = f"{os.getcwd()}\n$ "
 
     def __init__(self):
         super().__init__()
 
     # Help command
 
+    def exit(self):
+        
+        return True
+    
     def do_help(self, args):
         if args:
             try:
@@ -46,3 +50,11 @@ class Terminal(cmd.Cmd):
                 help_func = getattr(module, f'help_{module_name}', None)
                 if help_func:
                     setattr(self.__class__, f'help_{module_name}', help_func)
+                    
+    # Exit command
+    def do_exit(self, args=None):
+        """
+        Exits the terminal
+        """
+        print('Exiting the terminal...')
+        raise SystemExit
