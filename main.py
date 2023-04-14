@@ -6,4 +6,5 @@ import os
 
 if __name__ == '__main__':
     app = ConsoleApp(root)
+    app.create_terminal()
     root.mainloop()
