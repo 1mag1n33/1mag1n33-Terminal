@@ -1,4 +1,4 @@
-from shell.terminal import Terminal
+from src.other.terminal import Terminal
 
 
 
