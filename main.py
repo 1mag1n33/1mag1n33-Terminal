@@ -1,14 +1,9 @@
 from src.other.terminal import Terminal
+from src.app.app import root,ConsoleApp
+import tkinter as tk
 import os
 
 
 if __name__ == '__main__':
-    term = Terminal()
-    term.load_commands()
-    while True:
-        try:
-            term.cmdloop()
-            break
-        except KeyboardInterrupt:
-            print("\nKeyboardInterruption")
-            term.do_exit()
+    app = ConsoleApp(root)
+    root.mainloop()

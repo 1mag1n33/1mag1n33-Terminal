@@ -4,17 +4,14 @@ import importlib
 import pkgutil
 
 class Terminal(cmd.Cmd):
-    intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
-    prompt = f"{os.getcwd()}\n$ "
-
-    def __init__(self):
+    def __init__(self, write_output=None):
         super().__init__()
+        self.write_output = write_output or print
+        self.intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
+        self.prompt = f"{os.getcwd()}\n$ "
 
-    # Help command
+    
 
-    def exit(self):
-        
-        return True
     
     def do_help(self, args):
         if args:
