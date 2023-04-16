@@ -10,7 +10,6 @@ class Terminal(cmd.Cmd):
         self.intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
         self.prompt = f"{os.getcwd()}\n$ "
         
-        self.groups = {}
         
         self.load_commands()
 
@@ -39,7 +38,7 @@ class Terminal(cmd.Cmd):
 
     def load_commands(self):
         base_dir = 'src.other.commands'
-        groups = {}
+        self.groups = {}
         for dirpath, dirnames, filenames in os.walk(base_dir):
             for filename in filenames:
                 if filename.endswith('.py'):
@@ -51,13 +50,15 @@ class Terminal(cmd.Cmd):
                         command_func = getattr(module, function_name)
                         setattr(Terminal, command_func.__name__, command_func)
                         group = dirpath.split(os.sep)[-1]
-                        groups.setdefault(group, [])
-                        groups[group].append(module_name)
+                        self.groups.setdefault(group, [])
+                        self.groups[group].append(module_name)
                         help_func = getattr(module, f'help_{module_name}', None)
                         if help_func:
                             setattr(self.__class__, f'help_{module_name}', help_func)
 
-        for group, commands in groups.items():
+        Terminal.groups = self.groups
+
+        for group, commands in self.groups.items():
             print(group)
             for command in commands:
                 print(f'\t{command}')
