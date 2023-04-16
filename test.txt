@@ -1,0 +1,34 @@
+        self.console_frame = tk.Frame(self)
+        self.console_frame.pack(side="top", fill="both", expand=True)
+
+        self.scrollbar = tk.Scrollbar(self.console_frame)
+        self.scrollbar.pack(side="right", fill="y")
+
+        self.console = tk.Listbox(self.console_frame, bg='#242424', fg='#ffffff')
+        self.console.pack(side="left", fill="both", expand=True)
+
+        bold_font = tk.font.Font(self.console, self.console.cget("font"))
+        bold_font.configure(weight="bold")
+        self.console.configure(font=bold_font)  
+
+        self.scrollbar.config(command=self.console.yview)
+
+        self.process = None
+        self.running = False
+
+        startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            self.process = subprocess.Popen([path], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, startupinfo=startupinfo)
+            self.running = True
+
+            while self.running:
+                output = None
+                if self.process is not None:
+                    output = self.process.stdout.readline().strip()
+                    if output and self.running:
+                        self.console.insert('end', output)
+                        self.console.yview('end')
+                        if 'Preparing level "world"' in output:
+                            self.status_bar.config(text="Generating world...", bg = "#8B8000")
+                        elif "Done (" in output:
+                            self.loading_complete()

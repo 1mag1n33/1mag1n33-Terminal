@@ -28,11 +28,11 @@ class Terminal(cmd.Cmd):
     def help_help(self):
         """
         Usage: ?, help
-        Fuck Off, Gives u a list of the commands.
+        Gives u a list of the commands.
         """
 
     def load_commands(self):
-        package = 'shell.commands'
+        package = 'src.other.commands'
         for _, module_name, _ in pkgutil.iter_modules([package.replace('.', '/')]):
             # Import the module
             module = importlib.import_module(f'{package}.{module_name}')

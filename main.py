@@ -1,10 +1,13 @@
 from src.other.terminal import Terminal
-from src.app.app import root,ConsoleApp
-import tkinter as tk
-import os
 
 
 if __name__ == '__main__':
-    app = ConsoleApp(root)
-    app.create_terminal()
-    root.mainloop()
+    term = Terminal()
+    term.load_commands()
+    while True:
+        try:
+            term.cmdloop()
+            break
+        except KeyboardInterrupt:
+            print("\nKeyboardInterrupt")
+            term.do_exit()
