@@ -9,36 +9,13 @@ class Terminal(cmd.Cmd):
         self.write_output = write_output or print
         self.intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
         self.prompt = f"{os.getcwd()}\n$ "
-        
-        
+
+        self.groups = {}
+
         self.load_commands()
-
-
-
-    
-    def do_help(self, args):
-        if args:
-            try:
-                func = getattr(self, 'help_' + args)
-            except AttributeError:
-                print(f'No help found for "{args}"')
-            else:
-                print(func.__doc__)
-        else:
-            groups = self.groups
-            for group, commands in groups.items():
-                print(f'{group.capitalize()}:')
-                print('\n'.join(f'\t{command}' for command in commands))
-    
-    def help_help(self):
-        """
-        Usage: ?, help
-        Gives u a list of the commands.
-        """
 
     def load_commands(self):
         base_dir = 'src.other.commands'
-        self.groups = {}
         for dirpath, dirnames, filenames in os.walk(base_dir):
             for filename in filenames:
                 if filename.endswith('.py'):
@@ -56,15 +33,25 @@ class Terminal(cmd.Cmd):
                         if help_func:
                             setattr(self.__class__, f'help_{module_name}', help_func)
 
-        Terminal.groups = self.groups
+    def do_help(self, args):
+        if args:
+            try:
+                func = getattr(self, 'help_' + args)
+            except AttributeError:
+                print(f'No help found for "{args}"')
+            else:
+                print(func.__doc__)
+        else:
+            for group, commands in self.groups.items():
+                print(f'{group.capitalize()}:')
+                print('\n'.join(f'\t{command}' for command in commands))
+                
+    def help_help(self):
+        """
+        Usage: ?, help
+        Gives you a list of the commands.
+        """
 
-        for group, commands in self.groups.items():
-            print(group)
-            for command in commands:
-                print(f'\t{command}')
-
-                    
-    # Exit command
     def do_exit(self, args=None):
         """
         Exits the terminal
