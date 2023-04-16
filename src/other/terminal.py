@@ -9,8 +9,12 @@ class Terminal(cmd.Cmd):
         self.write_output = write_output or print
         self.intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
         self.prompt = f"{os.getcwd()}\n$ "
+        
+        self.groups = {}
+        
+        self.load_commands()
 
-    
+
 
     
     def do_help(self, args):
@@ -22,8 +26,10 @@ class Terminal(cmd.Cmd):
             else:
                 print(func.__doc__)
         else:
-            commands = [cmd[3:] for cmd in dir(self) if cmd.startswith('do_')]
-            print('\n'.join(commands))
+            groups = self.groups
+            for group, commands in groups.items():
+                print(f'{group.capitalize()}:')
+                print('\n'.join(f'\t{command}' for command in commands))
     
     def help_help(self):
         """
@@ -32,21 +38,30 @@ class Terminal(cmd.Cmd):
         """
 
     def load_commands(self):
-        package = 'src.other.commands'
-        for _, module_name, _ in pkgutil.iter_modules([package.replace('.', '/')]):
-            # Import the module
-            module = importlib.import_module(f'{package}.{module_name}')
-            # Get the function name from the module name
-            function_name = f'do_{module_name.split(".")[-1]}'
-            # Check if the function exists in the module
-            if hasattr(module, function_name):
-                # If it exists, get the function and add it as a command
-                command_func = getattr(module, function_name)
-                setattr(Terminal, command_func.__name__, command_func)
-                
-                help_func = getattr(module, f'help_{module_name}', None)
-                if help_func:
-                    setattr(self.__class__, f'help_{module_name}', help_func)
+        base_dir = 'src.other.commands'
+        groups = {}
+        for dirpath, dirnames, filenames in os.walk(base_dir):
+            for filename in filenames:
+                if filename.endswith('.py'):
+                    module_name = os.path.splitext(filename)[0]
+                    module_path = os.path.join(dirpath, filename).replace(os.sep, '.')
+                    module = importlib.import_module(module_path)
+                    function_name = f'do_{module_name}'
+                    if hasattr(module, function_name):
+                        command_func = getattr(module, function_name)
+                        setattr(Terminal, command_func.__name__, command_func)
+                        group = dirpath.split(os.sep)[-1]
+                        groups.setdefault(group, [])
+                        groups[group].append(module_name)
+                        help_func = getattr(module, f'help_{module_name}', None)
+                        if help_func:
+                            setattr(self.__class__, f'help_{module_name}', help_func)
+
+        for group, commands in groups.items():
+            print(group)
+            for command in commands:
+                print(f'\t{command}')
+
                     
     # Exit command
     def do_exit(self, args=None):
