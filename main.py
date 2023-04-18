@@ -1,5 +1,4 @@
 from src.other.terminal import Terminal
-from src.commands.do_exit import do_exit
 
 if __name__ == '__main__':
     term = Terminal()
@@ -10,4 +9,4 @@ if __name__ == '__main__':
             break
         except KeyboardInterrupt:
             print("\nKeyboardInterrupt")
-            do_exit()
+            term.do_exit()

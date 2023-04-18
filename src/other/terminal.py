@@ -3,29 +3,34 @@ import cmd
 import importlib
 import pkgutil
 
-
 class Terminal(cmd.Cmd):
-    def __init__(self, write_output=None):
-        super().__init__()
-        self.write_output = write_output or print
-        self.intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
-        self.prompt = f"{os.getcwd()}\n$ "
+    intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
+    prompt = f"{os.getcwd()}\n$ "
 
+    def __init__(self):
+        super().__init__()
 
     def load_commands(self):
-        base_dir = 'src.commands'
-        for dirpath, _, filenames in os.walk(base_dir):
-            for filename in filenames:
-                if filename.endswith('.py'):
-                    module_name = os.path.splitext(filename)[0]
-                    module_path = os.path.join(dirpath, filename).replace(os.sep, '.')
-                    module = importlib.import_module(module_path)
-                    function_name = f'do_{module_name}'
-                    if hasattr(module, function_name):
-                        command_func = getattr(module, function_name)
-                        setattr(Terminal, command_func.__name__, command_func)
-                        help_func = getattr(module, f'help_{module_name}', None)
-                        if help_func:
-                            setattr(self.__class__, f'help_{module_name}', help_func)
-
-
+        package = 'src.commands'
+        for _, module_name, _ in pkgutil.iter_modules([package.replace('.', '/')]):
+            # Import the module
+            module = importlib.import_module(f'{package}.{module_name}')
+            # Get the function name from the module name
+            function_name = f'do_{module_name.split(".")[-1]}'
+            # Check if the function exists in the module
+            if hasattr(module, function_name):
+                # If it exists, get the function and add it as a command
+                command_func = getattr(module, function_name)
+                setattr(Terminal, command_func.__name__, command_func)
+                
+                help_func = getattr(module, f'help_{module_name}', None)
+                if help_func:
+                    setattr(self.__class__, f'help_{module_name}', help_func)
+                    
+    # Exit command
+    def do_exit(self, args=None):
+        """
+        Exits the terminal
+        """
+        print('Exiting the terminal...')
+        raise SystemExit
