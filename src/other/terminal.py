@@ -13,8 +13,8 @@ class Terminal(cmd.Cmd):
 
 
     def load_commands(self):
-        base_dir = 'src.other.commands'
-        for dirpath, dirnames, filenames in os.walk(base_dir):
+        base_dir = 'src.commands'
+        for dirpath, _, filenames in os.walk(base_dir):
             for filename in filenames:
                 if filename.endswith('.py'):
                     module_name = os.path.splitext(filename)[0]
@@ -27,4 +27,5 @@ class Terminal(cmd.Cmd):
                         help_func = getattr(module, f'help_{module_name}', None)
                         if help_func:
                             setattr(self.__class__, f'help_{module_name}', help_func)
+
 
