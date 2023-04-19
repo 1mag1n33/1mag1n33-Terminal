@@ -32,7 +32,7 @@ class Terminal(cmd.Cmd):
                     continue
                 for obj in dir(module):
                     if obj.startswith('do_'):
-                        cmd_name = obj[3:]
+                        cmd_name = obj
                         cmd_func = getattr(module, obj)
                         setattr(self.__class__, cmd_name, cmd_func)
                         # Add the command to the dictionary of commands by folder
@@ -40,14 +40,9 @@ class Terminal(cmd.Cmd):
                         self.commands_by_folder.setdefault(folder_name, [])
                         self.commands_by_folder[folder_name].append(cmd_name)
                         # Check for a help function
-                        help_func = getattr(module, f'help_{cmd_name}', None)
+                        help_func = getattr(module, f'help_{cmd_name[3:]}', None)
                         if help_func:
-                            setattr(self.__class__, f'help_{cmd_name}', help_func)
-                        print(f"Command {cmd_name} loaded from folder {folder_name}")
-        print("Commands loaded:")
-        print(self.commands_by_folder)
-    
-
+                            setattr(self.__class__, f'help_{cmd_name[3:]}', help_func)
     # Help command
     def do_help(self, arg):
         """List available commands."""
@@ -68,4 +63,10 @@ class Terminal(cmd.Cmd):
                 else:
                     print()
                 for cmd in commands:
-                    print(f" - {cmd}")
+                    # Get the function object for the command
+                    func = getattr(self.__class__, cmd)
+                    # Get the docstring for the function
+                    doc = func.__doc__ or ''
+                    # Extract the first line of the docstring (if any) as the command description
+                    description = doc.strip().split('\n')[0]
+                    print(f" - {cmd[3:]}: {description}")
