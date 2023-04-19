@@ -1,6 +1,7 @@
 import os
 import cmd
 import importlib
+import keyboard
 
 class Terminal(cmd.Cmd):
     intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
@@ -14,6 +15,27 @@ class Terminal(cmd.Cmd):
 
         # Load the commands
         self.load_commands()
+
+        # Command history
+        self.command_history = []
+        self.current_command_index = 0
+        
+        keyboard.on_press_key('up', self.handle_up_arrow)
+        keyboard.on_press_key('down', self.handle_down_arrow)
+
+    def handle_up_arrow(self, event):
+        """Cycle through previous commands."""
+        if self.current_command_index > 0:
+            self.current_command_index -= 1
+            self.lastcmd = self.command_history[self.current_command_index]
+            self.stdout.write(f"\r$ {self.lastcmd}")
+        
+    def handle_down_arrow(self, event):
+        """Cycle through next commands."""
+        if self.current_command_index < len(self.command_history) - 1:
+            self.current_command_index += 1
+            self.lastcmd = self.command_history[self.current_command_index]
+            self.stdout.write(f"\r$ {self.lastcmd}")
 
     def load_commands(self):
         package = 'src/other/commands'
@@ -39,6 +61,14 @@ class Terminal(cmd.Cmd):
                         folder_name = os.path.relpath(dirpath, package)
                         self.commands_by_folder.setdefault(folder_name, [])
                         self.commands_by_folder[folder_name].append(cmd_name)
+                        # Check for a help function
+                        help_func = getattr(module, f'help_{cmd_name[3:]}', None)
+                        if help_func:
+                            setattr(self.__class__, f'help_{cmd_name[3:]}', help_func)
+                        print(f"Command {cmd_name[3:]} loaded from folder {folder_name}")
+        print("Commands loaded:")
+        print(self.commands_by_folder)
+
     # Help command
     def do_help(self, arg):
         """List available commands."""
@@ -59,10 +89,24 @@ class Terminal(cmd.Cmd):
                 else:
                     print()
                 for cmd in commands:
-                    # Get the function object for the command
-                    func = getattr(self.__class__, cmd)
-                    # Get the docstring for the function
-                    doc = func.__doc__ or ''
-                    # Extract the first line of the docstring (if any) as the command description
-                    description = doc.strip().split('\n')[0]
-                    print(f" - {cmd[3:]}: {description}")
+                    print(f" - {cmd}")
+
+    # Command history
+    def precmd(self, line):
+        self.command_history.append(line.strip())
+        self.current_command_index = len(self.command_history)
+        return line
+
+    def do_uparrow(self, arg):
+        """Cycle through previous commands."""
+        if self.current_command_index > 0:
+            self.current_command_index -= 1
+            self.lastcmd = self.command_history[self.current_command_index]
+            self.stdout.write(f"\r{self.prompt}{self.lastcmd}")
+        
+    def do_downarrow(self, arg):
+        """Cycle through next commands."""
+        if self.current_command_index < len(self.command_history) - 1:
+            self.current_command_index += 1
+            self.lastcmd = self.command_history[self.current_command_index]
+            self.stdout.write(f"\r{self.prompt}{self.lastcmd}")
