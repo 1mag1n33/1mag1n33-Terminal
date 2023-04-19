@@ -39,10 +39,6 @@ class Terminal(cmd.Cmd):
                         folder_name = os.path.relpath(dirpath, package)
                         self.commands_by_folder.setdefault(folder_name, [])
                         self.commands_by_folder[folder_name].append(cmd_name)
-                        # Check for a help function
-                        help_func = getattr(module, f'help_{cmd_name[3:]}', None)
-                        if help_func:
-                            setattr(self.__class__, f'help_{cmd_name[3:]}', help_func)
     # Help command
     def do_help(self, arg):
         """List available commands."""
