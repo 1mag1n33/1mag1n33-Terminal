@@ -15,6 +15,7 @@ def generate_response(prompt):
     return response.choices[0].text.strip()
 
 def do_chat(self, args):
+    """Allows you to chat with chatgbt"""
     print("Enter your prompt below ('exit' to quit):")
     while True:
         prompt = input("> ")

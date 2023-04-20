@@ -39,26 +39,18 @@ class Terminal(cmd.Cmd):
                         folder_name = os.path.relpath(dirpath, package)
                         self.commands_by_folder.setdefault(folder_name, [])
                         self.commands_by_folder[folder_name].append(cmd_name)
-                        # Check for a help function
-                        help_func = getattr(module, f'help_{cmd_name[3:]}', None)
-                        if help_func:
-                            setattr(self.__class__, f'help_{cmd_name[3:]}', help_func)
-                        print(f"Command {cmd_name[3:]} loaded from folder {folder_name}")
-        print("Commands loaded:")
-        print(self.commands_by_folder)
 
     # Help command
     def do_help(self, arg):
         """List available commands."""
         if arg:
-            try:
-                func = getattr(self, f'help_{arg}')
-            except AttributeError:
-                func = None
-            if func:
-                func()
+            if hasattr(self.__class__, f"do_{arg}"):
+                func = getattr(self.__class__, f"do_{arg}")
+                doc = func.__doc__ or ''
+                description = doc.strip().split('\n')[0]
+                print(description)
             else:
-                print(f"No help found for command '{arg}'.")
+                print(f"Unknown command '{arg}'")
         else:
             print("Available commands:")
             for folder, commands in self.commands_by_folder.items():
@@ -67,10 +59,7 @@ class Terminal(cmd.Cmd):
                 else:
                     print()
                 for cmd in commands:
-                    # Get the function object for the command
                     func = getattr(self.__class__, cmd)
-                    # Get the docstring for the function
                     doc = func.__doc__ or ''
-                    # Extract the first line of the docstring (if any) as the command description
                     description = doc.strip().split('\n')[0]
                     print(f" - {cmd[3:]}: {description}")
