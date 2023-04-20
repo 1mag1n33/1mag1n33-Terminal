@@ -17,4 +17,3 @@ def do_ls(self, args):
     files = os.listdir(path)
     print('\n'.join(files))
     
-
