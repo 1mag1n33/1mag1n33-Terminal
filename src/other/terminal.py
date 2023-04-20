@@ -63,3 +63,4 @@ class Terminal(cmd.Cmd):
                     doc = func.__doc__ or ''
                     description = doc.strip().split('\n')[0]
                     print(f" - {cmd[3:]}: {description}")
+            print('\n')
