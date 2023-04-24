@@ -1,6 +1,7 @@
 def do_minecraft(self, args):
     import argparse
     import json
+    import os
     from src.other.commands.fun.Minecraft._create import Create
     from src.other.commands.fun.Minecraft._run import Run
 
@@ -69,6 +70,10 @@ def do_minecraft(self, args):
             server_config['port'] = port_number
             with open(server_path, 'w') as f:
                 json.dump(server_config, f)
+        
+        
+        self.path = f'Mc_Servers/{Create().server_name}'
+        
         Run.Start(self)
         
         print(f"Running Minecraft server on port {port_number}")
