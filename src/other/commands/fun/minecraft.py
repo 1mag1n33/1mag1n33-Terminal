@@ -2,8 +2,8 @@ def do_minecraft(self, args):
     import argparse
     import json
     import os
-    from src.other.commands.fun.Minecraft._create import Create
-    from src.other.commands.fun.Minecraft._run import Run
+    from src.other.support_files.Minecraft._create import Create
+    from src.other.support_files.Minecraft._run import Run
 
     parser = argparse.ArgumentParser(prog='minecraft')
     subparsers = parser.add_subparsers(dest='command')
@@ -18,7 +18,7 @@ def do_minecraft(self, args):
     # parse the arguments
     parsed_args = parser.parse_args(args.split())
 
-    server_path = 'src/other/support_files/server_config.json'
+    server_path = 'src/other/support_files/Minecraft/server_config.json'
     
     # handle the sub-commands
     if parsed_args.command == 'create':
@@ -56,26 +56,27 @@ def do_minecraft(self, args):
         
     elif parsed_args.command == 'run':
         # load values from JSON file
-        with open(server_path, 'r') as f:
-            server_config = json.load(f)
+        try:
+            with open(server_path, 'r') as f:
+                server_config = json.load(f)
+            
+            # get port number from the JSON file
+            port = server_config.get('port', 25565)
+            
+            port_number = input(f"Enter port number (default: {port}): ")
+            if not port_number:
+                port_number = port
+            else:
+                port_number = int(port_number)
+                server_config['port'] = port_number
+                with open(server_path, 'w') as f:
+                    json.dump(server_config, f)
+            
+            self.path = f'Mc_Servers/{Create().server_name}'
+            Run.Start(self)
         
-        # get port number from the JSON file
-        port = server_config.get('port', 25565)
+        except FileNotFoundError:
+            print(f"Minecraft server with name '{server_name}' not found")
         
-        port_number = input(f"Enter port number (default: {port}): ")
-        if not port_number:
-            port_number = port
-        else:
-            port_number = int(port_number)
-            server_config['port'] = port_number
-            with open(server_path, 'w') as f:
-                json.dump(server_config, f)
-        
-        
-        self.path = f'Mc_Servers/{Create().server_name}'
-        
-        Run.Start(self)
-        
-        print(f"Running Minecraft server on port {port_number}")
     else:
         print("Invalid command")

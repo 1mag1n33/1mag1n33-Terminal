@@ -1,11 +1,11 @@
 import os
 import json
 
-from src.other.commands.fun.Minecraft.types.Vanilla import urls
+from src.other.support_files.Minecraft.types.Vanilla import urls
 
 class Create():
     def __init__(self):
-        server_path = 'src/other/support_files/server_config.json'
+        server_path = 'src/other/support_files/Minecraft/server_config.json'
         with open(server_path, 'r') as f:
             config = json.load(f)
         
