@@ -1,7 +1,6 @@
 import os
 import json
-
-from src.other.support_files.Minecraft.types.Vanilla import urls
+import requests
 
 class Create():
     def __init__(self):
@@ -15,6 +14,7 @@ class Create():
         self.port = config['port']
         self.path = f'Mc_Servers/{self.server_name}'
         self.java_path = os.environ.get('JAVA_HOME')
+        self.manifest_url = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 
     def generate_files(self):
 
@@ -40,10 +40,23 @@ class Create():
             l5 = "PAUSE\n"
             f.write(l1 + l2 + l3 + l4 + l5)
 
-        # Download server jar file
-        if self.version in urls:
-            url = urls[self.version]
-            jar_file_path = os.path.join(self.path, f'{self.version}.jar')
-            os.system(f'curl -o "{jar_file_path}" "{url}"')
-        else:
-            print(f"Error: Version {self.version} not found in urls")
+        try:
+            # Get the manifest JSON data
+            manifest_data = requests.get(self.manifest_url).json()
+
+            # Find the version entry for the desired version
+            version_entry = next(entry for entry in manifest_data["versions"] if entry["id"] == self.version)
+
+            # Get the URL for the server .jar file
+            server_url = version_entry["url"]
+            server_data = requests.get(server_url).json()
+            server_jar_url = server_data["downloads"]["server"]["url"]
+
+            # Download the server .jar file
+            filename = f"{self.path}/{self.version}.jar"
+            response = requests.get(server_jar_url)
+            with open(filename, "wb") as file:
+                file.write(response.content)
+        except:
+            print(f"{self.version} does not exist as a minecraft version.")
+        

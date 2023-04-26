@@ -20,12 +20,15 @@ def do_minecraft(self, args):
 
     server_path = 'src/other/support_files/Minecraft/server_config.json'
     
+    with open(server_path, 'r') as f:
+                server_config = json.load(f)
+    
     # handle the sub-commands
     if parsed_args.command == 'create':
         # prompt for version
-        version = input("Enter Minecraft version (default: latest): ")
+        version = input(f"Enter Minecraft version (default: {server_config['version']}): ")
         if not version:
-            version = 'latest'
+            version = server_config['version']
         
         # prompt for server name
         server_name = input("Enter server name (default: minecraft_server): ")
