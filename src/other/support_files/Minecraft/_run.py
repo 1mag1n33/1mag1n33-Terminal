@@ -1,14 +1,16 @@
 import os
 from src.other.support_files.Minecraft._create import Create
+from src.other.support_files.Minecraft._backup import Backup
 
 class Run():
     def __init__(self):
          
         self.server_name = Create().server_name
-        self.path = f'Mc_Servers/{self.server_name}'
+        self.path = f'Mc_Servers/Servers/{self.server_name}'
+        self.backup = f'Mc_Servers/Backups/{self.server_name}'
         
         
-    def Start(self):
+    def Start(self, backup_enabled=True):
         try:
             run_path = os.path.join(self.path, "run.bat")
             java_path = os.environ.get('JAVA_HOME')
@@ -24,4 +26,7 @@ class Run():
             print(f"Running Minecraft server on port {Create().port}")
         except FileNotFoundError:
             print(f"Minecraft server with name '{Create().server_name}' not found")
+        
+        if backup_enabled:
+            Backup().create_backup(self.path ,self.backup)
             
