@@ -1,1 +1,1 @@
-{"version": "1.19.4", "server_name": "minecraft_server", "memory": 4000, "port": 25565}
+{"version": "1.19.4", "server_name": "minecraft_server", "memory": 4000, "port": 25565, "update": true, "backup": true}

@@ -12,7 +12,7 @@ class Create():
         self.server_name = config['server_name']
         self.memory = config['memory']
         self.port = config['port']
-        self.path = f'Mc_Servers/{self.server_name}'
+        self.path = f'Mc_Servers/Servers/{self.server_name}'
         self.java_path = os.environ.get('JAVA_HOME')
         self.manifest_url = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 

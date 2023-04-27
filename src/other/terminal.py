@@ -1,10 +1,15 @@
 import os
 import cmd
 import importlib
+from colored import fg, bg, attr
+
+prompt_color = fg('green')
+text_color = fg('white')
+reset = attr('reset')
 
 class Terminal(cmd.Cmd):
     intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
-    prompt = f"{os.getcwd()}\n$ "
+    prompt = f"{prompt_color}{os.getcwd()}\n{reset}$ "
 
     def __init__(self):
         super().__init__()
