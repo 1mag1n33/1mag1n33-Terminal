@@ -28,5 +28,5 @@ class Run():
             print(f"Minecraft server with name '{Create().server_name}' not found")
         
         if backup_enabled:
-            Backup().create_backup(self.path ,self.backup)
+            Backup().create_backup(self.backup)
             
