@@ -1,4 +1,6 @@
 import os
+import threading
+from time import sleep
 from src.other.support_files.Minecraft._create import Create
 from src.other.support_files.Minecraft._backup import Backup
 
@@ -8,9 +10,14 @@ class Run():
         self.server_name = Create().server_name
         self.path = f'Mc_Servers/Servers/{self.server_name}'
         self.backup = f'Mc_Servers/Backups/{self.server_name}'
+    
+    @staticmethod
+    def backup_thread(backup_interval, path):
+        while True:
+            Backup().create_backup()
+            sleep(backup_interval * 60)
         
-        
-    def Start(self, backup_enabled=True):
+    def Start(self, backup_enabled):
         try:
             run_path = os.path.join(self.path, "run.bat")
             java_path = os.environ.get('JAVA_HOME')
@@ -28,5 +35,7 @@ class Run():
             print(f"Minecraft server with name '{Create().server_name}' not found")
         
         if backup_enabled:
-            Backup().create_backup(self.backup)
-            
+            backup_interval = 1 # interval in minutes
+            backup_thread = threading.Thread(target=Run.backup_thread, args=(backup_interval, self.path))
+            backup_thread.daemon = True
+            backup_thread.start()

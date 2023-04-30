@@ -4,7 +4,6 @@ def do_minecraft(self, args):
     import os
     from src.other.support_files.Minecraft._create import Create
     from src.other.support_files.Minecraft._run import Run
-    from src.other.support_files.Minecraft._backup import Backup
 
     parser = argparse.ArgumentParser(prog='minecraft')
     subparsers = parser.add_subparsers(dest='command')
@@ -12,7 +11,7 @@ def do_minecraft(self, args):
     # Sub Commands
     
     backup_parser = subparsers.add_parser('backup')
-    backup_parser.add_argument('backup_status', type=str, help='Set backup status (True or False)')
+    backup_parser.add_argument('backup_status', nargs='?' ,type=str, help='Set backup status (True or False)')
     
     run_parser = subparsers.add_parser('run')
     run_parser.add_argument('--port', '-p', type=int, default=25565)
@@ -26,7 +25,6 @@ def do_minecraft(self, args):
     
     with open(server_path, 'r') as f:
                 server_config = json.load(f)
-    
     
 
 
@@ -57,8 +55,16 @@ def do_minecraft(self, args):
             port = int(port)
         
         # write values to JSON file
+        
+        server_config['version'] = version
+        server_config['server_name'] = server_name
+        server_config['memory'] = memory
+        server_config['port'] = port
+                
         with open(server_path, 'w') as f:
-            json.dump({'version': version, 'server_name': server_name, 'memory': memory, 'port': port}, f)
+            json.dump(server_config, f)
+            
+            
                 
         # create the server
         Create().generate_files()
@@ -87,24 +93,26 @@ def do_minecraft(self, args):
             Run.Start(self, backup_enabled)
         
         except FileNotFoundError:
-            print(f"Minecraft server with name '{server_name}' not found")
+            print(f"Minecraft server with name '{Create().server_name}' not found")
             
     elif parsed_args.command == 'backup':
         # parse backup sub-command argument
-        
+
         with open(server_path, 'r') as f:
             server_config = json.load(f)
-        
+
         backup_status = parsed_args.backup_status
         if backup_status is None:
             # print current backup value
             backup_status = server_config.get('backup', True)
             print(f"Current backup value is {backup_status}")
-        else:
+        elif backup_status.lower() in ['true', 'false']:
             # set new backup value
-            server_config['backup'] = eval(backup_status)
+            server_config['backup'] = backup_status.lower() == 'true'
             with open(server_path, 'w') as f:
                 json.dump(server_config, f)
-            print(f"Backup value set to {eval(backup_status)}")
+            print(f"Backup value set to {backup_status.lower() == 'true'}")
+        else:
+            print("Invalid input. Please enter 'True' or 'False'.")
     else:
         print("Invalid command")
