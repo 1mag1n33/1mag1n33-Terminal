@@ -13,6 +13,9 @@ def do_minecraft(self, args):
     backup_parser = subparsers.add_parser('backup')
     backup_parser.add_argument('backup_status', nargs='?' ,type=str, help='Set backup status (True or False)')
     
+    update_parser = subparsers.add_parser('update')
+    backup_parser.add_argument('update_status', nargs='?' ,type=str, help='Set backup status (True or False)')
+    
     run_parser = subparsers.add_parser('run')
     run_parser.add_argument('--port', '-p', type=int, default=25565)
     
@@ -112,6 +115,24 @@ def do_minecraft(self, args):
             with open(server_path, 'w') as f:
                 json.dump(server_config, f)
             print(f"Backup value set to {backup_status.lower() == 'true'}")
+        else:
+            print("Invalid input. Please enter 'True' or 'False'.")
+            
+    elif parsed_args.command == 'update':
+        with open(server_path, 'r') as f:
+            server_config = json.load(f)
+
+        update_status = parsed_args.update_status
+        if update_status is None:
+            # print current backup value
+            update_status = server_config.get('update', True)
+            print(f"Current backup value is {update_status}")
+        elif update_status.lower() in ['true', 'false']:
+            # set new backup value
+            server_config['update'] = update_status.lower() == 'true'
+            with open(server_path, 'w') as f:
+                json.dump(server_config, f)
+            print(f"Updater value set to {update_status.lower() == 'true'}")
         else:
             print("Invalid input. Please enter 'True' or 'False'.")
     else:
