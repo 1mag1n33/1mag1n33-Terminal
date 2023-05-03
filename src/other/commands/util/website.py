@@ -3,7 +3,7 @@ import os
 import shutil
 import zipfile
 import requests
-from progress 
+from commands import ProgressBar
 def do_website(self, args):
     parser = argparse.ArgumentParser(prog='website')
     subparsers = parser.add_subparsers(dest='command')
