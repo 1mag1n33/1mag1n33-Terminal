@@ -6,7 +6,7 @@ init()  # initialize colorama
 
 class ProgressBar:
     """A progress bar"""
-    def __init__(self, total, prefix='', suffix=''):
+    def __init__(self, total , prefix='', suffix=''):
         self.total = total
         self.prefix = prefix
         self.suffix = suffix
