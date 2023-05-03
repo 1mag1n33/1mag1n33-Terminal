@@ -1,1 +1,1 @@
-from src.other.util.progressbar.progress import ProgressBar
+from src.other.util.progressbar import progress

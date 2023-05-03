@@ -5,6 +5,7 @@ from colorama import init, Fore, Style
 init()  # initialize colorama
 
 class ProgressBar:
+    """A progress bar"""
     def __init__(self, total, prefix='', suffix=''):
         self.total = total
         self.prefix = prefix

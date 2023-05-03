@@ -3,7 +3,10 @@ import os
 import shutil
 import zipfile
 import requests
-from commands import ProgressBar
+from commands import progress
+
+progresss = progress.ProgressBar
+
 def do_website(self, args):
     parser = argparse.ArgumentParser(prog='website')
     subparsers = parser.add_subparsers(dest='command')
@@ -16,7 +19,7 @@ def do_website(self, args):
         response = requests.get(url, stream=True)
         total_size = int(response.headers.get('content-length', 0))
         block_size = 1024 # 1 Kibibyte
-        progress_bar = ProgressBar.update(total=total_size, prefix='Flask', suffix='Complete')
+        progress_bar = progresss.update(total=total_size, prefix='Flask', suffix='Complete')
 
         with open(filename, 'wb') as f:
             for data in response.iter_content(block_size):
