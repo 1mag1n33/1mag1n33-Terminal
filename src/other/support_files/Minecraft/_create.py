@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+from src.other.util.progressbar.progress import ProgressBar
 
 class Create():
     def __init__(self):
@@ -17,7 +18,6 @@ class Create():
         self.manifest_url = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 
     def generate_files(self):
-
         if not os.path.exists(self.path):
             os.makedirs(self.path)
         
@@ -27,8 +27,6 @@ class Create():
             with open(eula_path, 'w') as f:
                 f.write("#By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).\n")
                 f.write("eula=true\n")
-
-        
 
         # Generate run.bat file
         run_path = os.path.join(self.path, "run.bat")
@@ -54,9 +52,17 @@ class Create():
 
             # Download the server .jar file
             filename = f"{self.path}/{self.version}.jar"
-            response = requests.get(server_jar_url)
+            response = requests.get(server_jar_url, stream=True)
+            total_size = int(response.headers.get('content-length', 0))
+            progress_bar = ProgressBar(total=total_size, prefix='Server Download', suffix='Complete')
+            progress_bar.start()
+
             with open(filename, "wb") as file:
-                file.write(response.content)
+                for data in response.iter_content(chunk_size=1024):
+                    file.write(data)
+                    progress_bar.update(len(data))
+            
+            progress_bar.stop()
+
         except:
             print(f"{self.version} does not exist as a minecraft version.")
-        

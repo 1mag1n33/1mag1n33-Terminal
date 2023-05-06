@@ -16,15 +16,17 @@ def do_website(self, args):
         filename = url.split('/')[-1]
         response = requests.get(url, stream=True)
         total_size = int(response.headers.get('content-length', 0))
+        progress_bar = ProgressBar(total=total_size, prefix='Flask', suffix='Complete')
         block_size = 1024 # 1 Kibibyte
         
-
+        progress_bar.start()
         with open(filename, 'wb') as f:
             for data in response.iter_content(block_size):
-                ProgressBar.update(data ,'Flask', 'Complete')
                 f.write(data)
-
+                progress_bar.update(len(data))
+                
         with zipfile.ZipFile(filename, 'r') as zip_ref:
             zip_ref.extractall(os.getcwd())
 
         os.remove(filename)
+        progress_bar.stop()
