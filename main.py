@@ -1,5 +1,5 @@
 from src.other.terminal import Terminal
-from src.other.support_files.update.github import autoupdate
+from src.other.support_files.update.autoupdate import autoupdate
 
 def exit():
     print('Exiting the terminal...')

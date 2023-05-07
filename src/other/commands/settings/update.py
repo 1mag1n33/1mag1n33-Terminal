@@ -4,6 +4,7 @@ def do_update(self, args):
     import json
     import os
     from src.imports import settings
+    from src.other.support_files.update.update import update
     
     parser = argparse.ArgumentParser(prog='update')
     subparsers = parser.add_subparsers(dest='command')
@@ -33,3 +34,6 @@ def do_update(self, args):
             print(f"Autoupdate value set to {autoupdate_status.lower() == 'true'}")
         else:
             print("Invalid input. Please enter 'True' or 'False'.")
+    
+    elif parsed_args.command is None:
+        update()

@@ -1,6 +1,4 @@
-{   
-    //Don't touch the version
-    "version": 1.0,
-
-    "autoupdate": false
+{
+    "autoupdate": true,
+    "version": 1.0
 }
