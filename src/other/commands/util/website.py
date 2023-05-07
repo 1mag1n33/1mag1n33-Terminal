@@ -6,6 +6,7 @@ import requests
 from src.other.util.progressbar.progress import ProgressBar
 
 def do_website(self, args):
+    """Downloads the Specified website framework"""
     parser = argparse.ArgumentParser(prog='website')
     subparsers = parser.add_subparsers(dest='command')
     subparsers.add_parser('flask')

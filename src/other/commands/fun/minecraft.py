@@ -1,4 +1,5 @@
 def do_minecraft(self, args):
+    """Does minecraft things"""
     import argparse
     import json
     import os
@@ -65,7 +66,7 @@ def do_minecraft(self, args):
         server_config['port'] = port
                 
         with open(server_path, 'w') as f:
-            json.dump(server_config, f)
+            json.dump(server_config, f, indent=4, sort_keys=True)
             
             
                 
@@ -89,7 +90,7 @@ def do_minecraft(self, args):
                 port_number = int(port_number)
                 server_config['port'] = port_number
                 with open(server_path, 'w') as f:
-                    json.dump(server_config, f)
+                    json.dump(server_config, f, indent=4, sort_keys=True)
             
             self.path = f'Mc_Servers/Servers/{Create().server_name}'
             backup_enabled = server_config.get('backup', True)
@@ -113,7 +114,7 @@ def do_minecraft(self, args):
             # set new backup value
             server_config['backup'] = backup_status.lower() == 'true'
             with open(server_path, 'w') as f:
-                json.dump(server_config, f)
+                json.dump(server_config, f, indent=4, sort_keys=True)
             print(f"Backup value set to {backup_status.lower() == 'true'}")
         else:
             print("Invalid input. Please enter 'True' or 'False'.")
@@ -131,7 +132,7 @@ def do_minecraft(self, args):
             # set new backup value
             server_config['update'] = update_status.lower() == 'true'
             with open(server_path, 'w') as f:
-                json.dump(server_config, f)
+                json.dump(server_config, f, indent=4, sort_keys=True)
             print(f"Updater value set to {update_status.lower() == 'true'}")
         else:
             print("Invalid input. Please enter 'True' or 'False'.")
