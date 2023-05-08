@@ -8,7 +8,8 @@ set /p choice=Enter choice:
 if %choice%==1 (
     python main.py
 ) else if %choice%==2 (
-    pip install -r src/req.txt
+    cd src
+    pip install -r req.txt
 ) else (
     echo Invalid choice
     goto menu

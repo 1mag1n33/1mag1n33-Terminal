@@ -3,10 +3,15 @@ import cmd
 import importlib
 from colored import fg, bg, attr
 
+# main colors
 prompt_color = fg('green')
 text_color = fg('white')
 reset = attr('reset')
 
+# help colors
+help_color = fg('yellow')
+group_color = fg('blue')
+desc_color = fg('red')
 class Terminal(cmd.Cmd):
     intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
     prompt = f"{prompt_color}{os.getcwd()}\n{reset}$ "
@@ -60,12 +65,12 @@ class Terminal(cmd.Cmd):
             print("Available commands:")
             for folder, commands in self.commands_by_folder.items():
                 if folder:
-                    print(f"\n{folder}:")
+                    print(f"\n  {group_color}{folder}{reset}:")
                 else:
                     print()
                 for cmd in commands:
                     func = getattr(self.__class__, cmd)
                     doc = func.__doc__ or ''
                     description = doc.strip().split('\n')[0]
-                    print(f" - {cmd[3:]}: {description}")
+                    print(f"    - {help_color}{cmd[3:]}{reset}: {desc_color}{description}{reset}")
             print('\n')
