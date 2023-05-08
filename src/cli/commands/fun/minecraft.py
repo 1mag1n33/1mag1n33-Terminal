@@ -3,8 +3,8 @@ def do_minecraft(self, args):
     import argparse
     import json
     import os
-    from src.other.support_files.Minecraft._create import Create
-    from src.other.support_files.Minecraft._run import Run
+    from src.cli.support_files.Minecraft._create import Create
+    from src.cli.support_files.Minecraft._run import Run
 
     parser = argparse.ArgumentParser(prog='minecraft')
     subparsers = parser.add_subparsers(dest='command')

@@ -26,7 +26,7 @@ class Terminal(cmd.Cmd):
         self.load_commands()
 
     def load_commands(self):
-        package = 'src/other/commands'
+        package = 'src/cli/commands'
         for dirpath, dirnames, filenames in os.walk(package):
             # Remove subdirectories from dirnames so they're not processed again
             dirnames[:] = [d for d in dirnames if not d.startswith('.')]
@@ -36,7 +36,7 @@ class Terminal(cmd.Cmd):
                 modname = os.path.splitext(filename)[0]
                 module_path = os.path.join(dirpath, filename)
                 try:
-                    module = importlib.import_module(f'src.other.commands.{os.path.relpath(module_path, package)[:-3].replace(os.path.sep, ".")}')
+                    module = importlib.import_module(f'src.cli.commands.{os.path.relpath(module_path, package)[:-3].replace(os.path.sep, ".")}')
                 except Exception as e:
                     print(f"Failed to load module {modname} from {module_path}: {e}")
                     continue

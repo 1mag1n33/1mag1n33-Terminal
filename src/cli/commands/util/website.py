@@ -3,7 +3,7 @@ import os
 import shutil
 import zipfile
 import requests
-from src.other.util.progressbar.progress import ProgressBar
+from src.cli.util.progressbar.progress import ProgressBar
 
 def do_website(self, args):
     """Downloads the Specified website framework"""

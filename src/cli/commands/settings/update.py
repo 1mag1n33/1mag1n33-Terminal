@@ -4,7 +4,7 @@ def do_update(self, args):
     import json
     import os
     from src.imports import settings
-    from src.other.support_files.update.update import update
+    from src.cli.support_files.update.update import update
     
     parser = argparse.ArgumentParser(prog='update')
     subparsers = parser.add_subparsers(dest='command')
