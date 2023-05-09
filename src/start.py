@@ -11,8 +11,7 @@ def exit():
 with open(settings, 'r') as f:
             settings_config = json.load(f)
 
-if __name__ == '__main__':
-    
+class start():
     if settings_config.get('debug', True):
         while True:
             try:
@@ -36,4 +35,3 @@ if __name__ == '__main__':
             except KeyboardInterrupt:
                 print("\nKeyboardInterrupt")
                 exit()
-            
