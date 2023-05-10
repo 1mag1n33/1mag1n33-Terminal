@@ -1,5 +1,0 @@
-.venv
-src/cli/commands/fun/
-src/cli/support_files/Minecraft/
-src/cli/commands/util/python.py
-src/cli/commands/util/website.py
