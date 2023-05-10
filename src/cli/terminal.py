@@ -12,6 +12,7 @@ reset = attr('reset')
 help_color = fg('yellow')
 group_color = fg('blue')
 desc_color = fg('red')
+
 class Terminal(cmd.Cmd):
     intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
     prompt = f"{prompt_color}{os.getcwd()}\n{reset}$ "
@@ -21,6 +22,8 @@ class Terminal(cmd.Cmd):
         
         # Dictionary to hold the commands organized by folder
         self.commands_by_folder = {}
+        # Command history
+        self.command_history = []
 
         # Load the commands
         self.load_commands()
@@ -74,3 +77,24 @@ class Terminal(cmd.Cmd):
                     description = doc.strip().split('\n')[0]
                     print(f"    - {help_color}{cmd[3:]}{reset}: {desc_color}{description}{reset}")
             print('\n')
+
+    # Override the default cmdloop method to add command history
+    def cmdloop(self, intro=None):
+        print(self.intro)
+        while True:
+            try:
+                line = input(self.prompt)
+            except EOFError:
+                line = 'EOF'
+            if not line:
+                continue
+
+            # Add the command to the history
+            self.command_history.append(line.strip())
+
+            # Exit the loop if the user enters "exit"
+            if line.lower() == 'exit':
+                break
+
+            # Pass the command to the command processor
+            self
