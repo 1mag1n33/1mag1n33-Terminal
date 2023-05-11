@@ -1,5 +1,5 @@
 {
     "autoupdate": true,
-    "debug": true,
+    "debug": false,
     "version": 1.0
 }
