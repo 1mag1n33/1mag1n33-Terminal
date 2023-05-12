@@ -1,2 +1,2 @@
-from cli.commands.util.info import info
+from cli.commands.util.cmd_info import info
 print(info)
