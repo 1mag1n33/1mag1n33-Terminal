@@ -1,6 +1,6 @@
 import os
 import json
-from src.cli.terminal import Terminal
+from src.cli.Shell.terminal import Terminal
 from src.cli.support_files.update.autoupdate import autoupdate
 from src.imports import settings
 
