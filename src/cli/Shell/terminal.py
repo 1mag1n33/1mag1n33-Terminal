@@ -5,7 +5,7 @@ import pickle
 from colored import fg, attr
 import multiprocessing
 import inspect
-from .command_loader import load_commands
+from src.cli.Shell.command_loader import load_commands
 
 # main colors
 prompt_color = fg('green')
@@ -20,14 +20,14 @@ desc_color = fg('red')
 class Terminal(cmd.Cmd):
     intro = "Welcome to the 1mag1n33 Terminal. Type help or ? to list commands.\n"
     prompt = f"{prompt_color}{os.getcwd()}\n{reset}$ "
-
     def __init__(self):
         super().__init__()
 
         # Dictionary to hold the commands organized by folder
-        self.commands_by_folder = {}
-        
-        load_commands(self.commands_by_folder, Terminal)
+
+    def load():
+        load_commands('src\cli\Shell\commands.pickle', Terminal)
+
 
     # Help command
         # Help command

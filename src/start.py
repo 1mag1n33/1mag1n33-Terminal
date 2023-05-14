@@ -17,6 +17,7 @@ class start():
             try:
                 os.system('cls' if os.name == 'nt' else 'clear')
                 term = Terminal()
+                term.load()
                 term.cmdloop()
             except Exception as e:
                 print(e)
