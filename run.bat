@@ -2,7 +2,7 @@
 
 :menu
 echo 1. Run the application
-echo 2. Install the application
+echo 2. Install the dependencies
 echo 3. Information
 set /p choice=Enter choice: 
 

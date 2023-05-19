@@ -1,4 +1,4 @@
-from src.start import start
+from src.startfiles.start import start
 
 if __name__ == '__main__':    
     start()

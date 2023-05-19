@@ -5,14 +5,15 @@ import inspect
 
 def load_commands(commands_file, Terminal):
     # Load commands from the directory
+    print(Terminal)
     package = 'src.cli.commands'
     commands_by_folder = {}
-
+    
     for dirpath, dirnames, filenames in os.walk(package):
         # Remove subdirectories from dirnames so they're not processed again
         dirnames[:] = [d for d in dirnames if not d.startswith('.')]
         
-        print(dirpath, dirnames, filenames)  # Moved here
+        print(dirpath, dirnames, filenames)  # Print the directory information
         
         for filename in filenames:
             if not filename.endswith('.py') or filename.startswith('_'):
