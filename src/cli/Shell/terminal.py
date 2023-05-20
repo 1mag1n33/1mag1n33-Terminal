@@ -5,7 +5,7 @@ import pickle
 from colored import fg, attr
 import multiprocessing
 import inspect
-from src.cli.Shell.command_loader import load_commands
+from src.cli.Shell.command_loader import load_commands,commands_by_folder
 
 # main colors
 prompt_color = fg('green')
@@ -25,8 +25,7 @@ class Terminal(cmd.Cmd):
 
         # Dictionary to hold the commands organized by folder
 
-    def load():
-        load_commands('src\cli\Shell\commands.pickle', Terminal)
+        load_commands(self)
 
 
     # Help command
@@ -43,15 +42,16 @@ class Terminal(cmd.Cmd):
                 print(f"Unknown command '{arg}'")
         else:
             print("Available commands:")
-            for folder, commands in self.commands_by_folder.items():
+            for folder, commands in commands_by_folder.items():
                 if folder:
                     print(f"\n  {group_color}{folder}{reset}:")
                 else:
                     print()
                 for cmd in commands:
-                    cmd_name = cmd[4:]
-                    func = getattr(self.__class__, f"do_{cmd_name}")
+                    func = getattr(self.__class__, cmd)
                     doc = func.__doc__ or ''
                     description = doc.strip().split('\n')[0]
-                    print(f"    - {help_color}{cmd_name}{reset}: {desc_color}{description}{reset}")
+                    print(f"    - {help_color}{cmd[3:]}{reset}: {desc_color}{description}{reset}")
+            print('\n')
+
 
